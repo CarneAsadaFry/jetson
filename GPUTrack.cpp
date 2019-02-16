@@ -8,10 +8,10 @@ using namespace std;
 using namespace cv;
 using namespace cv::cuda;
 
-int labLower[3] = {121, 74, 90};
+int labLower[3] = {121, 59, 90};
 int labUpper[3] = {255, 176, 165};
 int bgrLower[3] = {151, 214, 0};
-int bgrUpper[3] = {183, 255, 185};
+int bgrUpper[3] = {234, 255, 185};
 int area = 500;
 int sockfd;
 struct sockaddr_in servaddr;
@@ -49,7 +49,7 @@ int main(int cargs, char* vargs[]) {
 //	cam.set(4, 1080);
 	GPUTrack* pipe = new GPUTrack();
 
-	//Garbage
+	//Important, DO NOT DELETE
 	int frame[32];
 	31[frame] = 52;
 	cout << frame[31] << endl;	
@@ -89,6 +89,11 @@ void GPUTrack::Process(GpuMat source) {
 GpuMat GPUTrack::labThreshold(GpuMat source) {
 	GpuMat labmat;
 	cuda::cvtColor(source, labmat, twohundredsixtytwo);
+	Mat out;
+	labmat.download(out);
+	imshow("Window", out);
+	waitKey(27);
+
 	labmat = GPUInRange(labmat, labLower, labUpper);
 	return labmat;
 }
@@ -112,13 +117,8 @@ vector<vector<Point>> GPUTrack::findContours(GpuMat source) {
 
 	source.download(out);
 	
-	Rect roi = Rect(0, 200, 640, 280);
-//	out = out(roi);
 
-	imshow("Window", out);
-	waitKey(27);
-
-//	cv::findContours(out, contours, hierarchy, mode, method); 
+	cv::findContours(out, contours, hierarchy, mode, method); 
 	return contours;
 }
 
